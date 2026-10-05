@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte ODS 12 - Admin CompraAmigo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f4f9; display: flex; }
+        .sidebar { width: 250px; background-color: #333; color: white; height: 100vh; padding: 20px; box-sizing: border-box; position: fixed; }
+        .sidebar h2 { color: #FFA726; font-size: 20px; }
+        .sidebar a { display: block; color: #ccc; text-decoration: none; margin: 15px 0; padding: 8px 10px; border-radius: 4px; font-size: 14px; }
+        .sidebar a:hover, .sidebar a.active { background-color: #444; color: #FFA726; }
+        .sidebar hr { border: 0; border-top: 1px solid #545454; margin: 20px 0; }
+        .btn-logout { color: #d9534f !important; font-weight: bold; }
+        .content { margin-left: 250px; flex-grow: 1; padding: 30px; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 6px; overflow: hidden; margin-top: 20px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; }
+        th { background-color: #007BFF; color: white; }
+    </style>
+    <script src="js/admin-session.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <a href="dashboard.html">📊 Dashboard General</a>
+        <a href="inventario-admin.html">📦 Gestión de Inventario</a>
+        <a href="pedidos-admin.html">🛒 Gestión de Pedidos</a>
+        <a href="bot-admin.html">💬 Consultas del Bot IA</a>
+        <a href="ods-admin.html" class="active">🌱 Reporte ODS 12</a>
+        <hr>
+        <a href="index.html">🏠 Ir a la Web Pública</a>
+        <a href="login.html" class="btn-logout" data-admin-logout>⬅ Cerrar Sesión</a>
+    </div>
+
+    <div class="content">
+        <h1>Reporte de Sostenibilidad y ODS 12</h1>
+        <p style="color: #666;">Monitoreo del impacto ambiental y reducción de devoluciones en la plataforma.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Categoría</th>
+                    <th>Devoluciones Evitadas</th>
+                    <th>CO₂ Ahorrado</th>
+                    <th>Estado ODS 12</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Casacas y Abrigos</strong></td>
+                    <td>15 prendas</td>
+                    <td>18.5 kg</td>
+                    <td><span style="color: green; font-weight: bold;">Optimizado</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Calzado Eco-Friendly</strong></td>
+                    <td>12 prendas</td>
+                    <td>14.0 kg</td>
+                    <td><span style="color: green; font-weight: bold;">Optimizado</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Algodón Orgánico</strong></td>
+                    <td>11 prendas</td>
+                    <td>12.5 kg</td>
+                    <td><span style="color: green; font-weight: bold;">Optimizado</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

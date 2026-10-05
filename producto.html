@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de producto - CompraAmigo</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body data-page="tienda" data-chat="1">
+    <header class="app-header" id="site-header"></header>
+
+    <main class="page" id="content"></main>
+
+    <footer class="app-footer" id="site-footer"></footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const id = new URLSearchParams(location.search).get("id");
+            const p = getProduct(id);
+            const root = document.getElementById("content");
+
+            if (!p) {
+                root.innerHTML = `
+                    <div class="empty-state">
+                        <div class="big">😕</div>
+                        <h3>Producto no encontrado</h3>
+                        <p>Puede que el enlace sea incorrecto. Vuelve al catálogo para elegir otro.</p>
+                        <a class="btn" href="tienda.html">Ir al catálogo</a>
+                    </div>`;
+                return;
+            }
+
+            document.title = p.name + " - CompraAmigo";
+            let size = p.sizes.length > 1 ? defaultSize(p) : p.sizes[0];
+            let qty = 1;
+            const fav = getFavs().includes(p.id);
+
+            root.innerHTML = `
+                <p class="breadcrumb"><a href="tienda.html">Catálogo</a> / ${p.cat} / ${p.name}</p>
+                <div class="detail">
+                    <div class="detail-img-wrap">
+                        <button class="fav-btn ${fav ? "on" : ""}" data-fav="${p.id}" aria-label="Guardar en favoritos">${fav ? "♥" : "♡"}</button>
+                        <div class="detail-img">${productImg(p)}</div>
+                    </div>
+                    <div class="detail-info">
+                        <span class="tag">🌱 Ahorra ${p.co2} kg CO₂</span>
+                        <h1>${p.name}</h1>
+                        <p class="price">${fmt(p.price)}</p>
+                        <p class="desc">${p.desc}</p>
+
+                        <h4>${p.sizes.length > 1 ? "Elige tu talla" : "Talla"}</h4>
+                        <div class="size-options" id="sizes">
+                            ${p.sizes.map(s => `<button type="button" class="size-btn ${s === size ? "sel" : ""}" data-size="${s}">${s}</button>`).join("")}
+                        </div>
+
+                        <h4>Cantidad</h4>
+                        <div class="qty">
+                            <button type="button" id="minus" aria-label="Menos">−</button>
+                            <span id="qty">1</span>
+                            <button type="button" id="plus" aria-label="Más">+</button>
+                        </div>
+
+                        <div class="detail-actions">
+                            <button class="btn" id="add">Añadir al carrito</button>
+                            <button class="btn btn-dark" id="buy">Comprar ahora</button>
+                        </div>
+
+                        <div class="eco-box">
+                            🌍 Al elegir este producto ahorras aproximadamente <strong>${p.co2} kg de CO₂</strong>
+                            frente a una alternativa convencional.
+                        </div>
+                        <ul class="spec-list">${p.specs.map(s => `<li>${s}</li>`).join("")}</ul>
+                    </div>
+                </div>
+
+                <h2 class="section-title">También te puede interesar</h2>
+                <div class="grid-products" id="related"></div>`;
+
+            document.getElementById("related").innerHTML =
+                PRODUCTS.filter(x => x.id !== p.id).slice(0, 3).map(productCard).join("");
+
+            document.getElementById("sizes").addEventListener("click", e => {
+                const b = e.target.closest("[data-size]");
+                if (!b) return;
+                size = b.dataset.size;
+                document.querySelectorAll(".size-btn").forEach(x => x.classList.toggle("sel", x === b));
+            });
+            document.getElementById("minus").addEventListener("click", () => {
+                qty = Math.max(1, qty - 1);
+                document.getElementById("qty").textContent = qty;
+            });
+            document.getElementById("plus").addEventListener("click", () => {
+                qty = Math.min(10, qty + 1);
+                document.getElementById("qty").textContent = qty;
+            });
+            document.getElementById("add").addEventListener("click", () => addToCart(p.id, size, qty));
+            document.getElementById("buy").addEventListener("click", () => {
+                addToCart(p.id, size, qty);
+                location.href = "carrito.html";
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - CompraAmigo</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body data-page="inicio" data-chat="1">
+    <header class="app-header" id="site-header"></header>
+
+    <main>
+        <section class="hero">
+            <h1 id="greeting">¡Hola!</h1>
+            <p>¿Qué vas a descubrir hoy en CompraAmigo?</p>
+            <br>
+            <a class="btn" href="tienda.html">Explorar el catálogo</a>
+        </section>
+
+        <div class="page">
+            <div class="quick-grid">
+                <a class="quick-card" href="tienda.html">
+                    <div class="ico">🛍️</div>
+                    <h3>Catálogo</h3>
+                    <p>Mira todos los productos</p>
+                </a>
+                <a class="quick-card" href="carrito.html">
+                    <div class="ico">🛒</div>
+                    <h3>Mi carrito</h3>
+                    <p id="cart-info">Aún no tienes productos</p>
+                </a>
+                <a class="quick-card" href="pedidos.html">
+                    <div class="ico">📦</div>
+                    <h3>Mis pedidos</h3>
+                    <p id="orders-info">Revisa tus compras</p>
+                </a>
+                <a class="quick-card" href="tips.html">
+                    <div class="ico">💡</div>
+                    <h3>Tips</h3>
+                    <p>Compra mejor y cuida el planeta</p>
+                </a>
+            </div>
+
+            <h2 class="section-title">Productos destacados</h2>
+            <div class="grid-products" id="featured"></div>
+
+            <h2 class="section-title">Tu impacto</h2>
+            <div class="banner-eco">
+                <div>
+                    <h3 id="impact-title">Todavía no hay CO₂ ahorrado</h3>
+                    <p>Cada compra sostenible suma al Objetivo de Desarrollo Sostenible 12.</p>
+                </div>
+                <a class="btn btn-dark" href="impacto.html">Ver mi impacto</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer" id="site-footer"></footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = getUser();
+            document.getElementById("greeting").textContent = "¡Hola, " + user.name.split(" ")[0] + "!";
+
+            const n = getCart().reduce((s, l) => s + l.qty, 0);
+            if (n > 0) document.getElementById("cart-info").textContent = n + (n === 1 ? " producto" : " productos") + " en tu carrito";
+
+            const orders = getOrders();
+            if (orders.length) document.getElementById("orders-info").textContent = orders.length + (orders.length === 1 ? " pedido realizado" : " pedidos realizados");
+
+            const co2 = orders.reduce((s, o) => s + o.co2, 0);
+            if (co2 > 0) document.getElementById("impact-title").textContent = "Ya ahorraste " + co2.toFixed(1) + " kg de CO₂ con tus compras";
+
+            document.getElementById("featured").innerHTML = PRODUCTS.slice(0, 3).map(productCard).join("");
+        });
+    </script>
+</body>
+</html>

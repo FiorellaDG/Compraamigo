@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión - CompraAmigo</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <div class="auth-wrap">
+        <div class="auth-card">
+            <a class="brand" href="index.html">Compra<span>Amigo</span></a>
+
+            <div class="tabs" role="tablist">
+                <button class="tab active" type="button" data-tab="login" role="tab">Iniciar sesión</button>
+                <button class="tab" type="button" data-tab="registro" role="tab">Registrarse</button>
+            </div>
+
+            <!-- LOGIN -->
+            <form id="form-login">
+                <div class="field">
+                    <label for="login-email">Correo electrónico</label>
+                    <input type="email" id="login-email" placeholder="tucorreo@ejemplo.com" required>
+                </div>
+                <div class="field">
+                    <label for="login-pass">Contraseña</label>
+                    <input type="password" id="login-pass" placeholder="Tu contraseña" required>
+                </div>
+                <p class="form-error" id="login-error" role="alert" hidden>Correo o contraseña incorrectos.</p>
+                <button class="btn btn-block" type="submit">Iniciar sesión</button>
+                <p class="auth-note">El mismo acceso reconoce el rol de cliente o administrador.</p>
+            </form>
+
+            <!-- REGISTRO -->
+            <form id="form-registro" hidden>
+                <div class="field">
+                    <label for="reg-nombre">Nombre completo</label>
+                    <input type="text" id="reg-nombre" placeholder="Ej. María Torres" required>
+                </div>
+                <div class="field">
+                    <label for="reg-email">Correo electrónico</label>
+                    <input type="email" id="reg-email" placeholder="tucorreo@ejemplo.com" required>
+                </div>
+                <div class="field">
+                    <label for="reg-pass">Contraseña</label>
+                    <input type="password" id="reg-pass" minlength="6" placeholder="Mínimo 6 caracteres" required>
+                </div>
+                <div class="field">
+                    <label for="reg-pass2">Confirmar contraseña</label>
+                    <input type="password" id="reg-pass2" placeholder="Repite tu contraseña" required>
+                </div>
+                <label class="check"><input type="checkbox" required> Acepto los términos de servicio y la política de privacidad.</label>
+                <p class="form-error" id="reg-error" role="alert" hidden></p>
+                <button class="btn btn-block" type="submit">Crear mi cuenta</button>
+            </form>
+
+            <a class="back" href="index.html">← Volver a la página principal</a>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        /* Cuentas predefinidas del prototipo (cliente y administrador).
+           Las cuentas creadas desde "Registrarse" se guardan en localStorage como clientes. */
+        const DEFAULT_ACCOUNTS = [
+            { name: "Cliente",       email: "cliente@gmail.com", pass: "123456",   role: "cliente" },
+            { name: "Administrador", email: "admin@gmail.com",   pass: "Admin123", role: "admin" }
+        ];
+        const allAccounts = () => [...DEFAULT_ACCOUNTS, ...LS.get("ca_accounts", [])];
+        const findAccount = email => allAccounts().find(a => a.email.toLowerCase() === email.toLowerCase());
+
+        const formLogin = document.getElementById("form-login");
+        const formReg = document.getElementById("form-registro");
+
+        function goHome(account) {
+            setUser({ name: account.name, email: account.email, role: account.role });
+            location.href = account.role === "admin" ? "dashboard.html" : "inicio.html";
+        }
+
+        // Si ya hay una sesión abierta, entra directo a su pantalla
+        const current = LS.get("ca_user", null);
+        if (current) location.replace(current.role === "admin" ? "dashboard.html" : "inicio.html");
+
+        // Pestañas: Iniciar sesión / Registrarse
+        document.querySelectorAll(".tab").forEach(tab => {
+            tab.addEventListener("click", () => {
+                document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t === tab));
+                const isLogin = tab.dataset.tab === "login";
+                formLogin.hidden = !isLogin;
+                formReg.hidden = isLogin;
+            });
+        });
+        const openFromHash = () => {
+            document.querySelector(location.hash === "#registro" ? '[data-tab="registro"]' : '[data-tab="login"]').click();
+        };
+        if (location.hash === "#registro") openFromHash();
+        window.addEventListener("hashchange", openFromHash);
+
+        formLogin.addEventListener("submit", e => {
+            e.preventDefault();
+            const email = document.getElementById("login-email").value.trim();
+            const pass = document.getElementById("login-pass").value;
+            const account = findAccount(email);
+            if (!account || account.pass !== pass) {
+                document.getElementById("login-error").hidden = false;
+                return;
+            }
+            goHome(account);
+        });
+
+        formReg.addEventListener("submit", e => {
+            e.preventDefault();
+            const err = document.getElementById("reg-error");
+            const email = document.getElementById("reg-email").value.trim();
+
+            if (document.getElementById("reg-pass").value !== document.getElementById("reg-pass2").value) {
+                err.textContent = "Las contraseñas no coinciden.";
+                err.hidden = false;
+                return;
+            }
+            if (findAccount(email)) {
+                err.textContent = "Ese correo ya está registrado. Inicia sesión o usa otro correo.";
+                err.hidden = false;
+                return;
+            }
+            err.hidden = true;
+
+            const account = {
+                name: document.getElementById("reg-nombre").value.trim(),
+                email,
+                pass: document.getElementById("reg-pass").value,
+                role: "cliente"
+            };
+            LS.set("ca_accounts", [...LS.get("ca_accounts", []), account]);
+            goHome(account);
+        });
+    </script>
+</body>
+</html>

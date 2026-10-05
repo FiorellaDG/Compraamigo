@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - CompraAmigo</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body data-page="carrito">
+    <header class="app-header" id="site-header"></header>
+
+    <main class="page">
+        <div class="stepper">
+            <div class="st done"><b>1</b> Carrito</div><div class="sep"></div>
+            <div class="st current"><b>2</b> Datos y pago</div><div class="sep"></div>
+            <div class="st"><b>3</b> Confirmación</div>
+        </div>
+
+        <h1 class="page-title">Finalizar compra</h1>
+        <p class="page-sub">Completa tus datos de entrega y elige cómo pagar.</p>
+
+        <div id="empty" class="empty-state" hidden>
+            <div class="big">🛒</div>
+            <h3>No tienes productos para pagar</h3>
+            <p>Añade algo al carrito para continuar con tu compra.</p>
+            <a class="btn" href="tienda.html">Ir al catálogo</a>
+        </div>
+
+        <form id="checkout-form" class="two-col" hidden>
+            <div class="panel">
+                <section class="form-section">
+                    <h3>1. Datos de entrega</h3>
+                    <div class="form-grid">
+                        <div class="field full">
+                            <label for="nombre">Nombre completo</label>
+                            <input type="text" id="nombre" required>
+                        </div>
+                        <div class="field">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" placeholder="999 999 999" required>
+                        </div>
+                        <div class="field">
+                            <label for="ciudad">Ciudad</label>
+                            <input type="text" id="ciudad" value="Lima" required>
+                        </div>
+                        <div class="field full">
+                            <label for="direccion">Dirección</label>
+                            <input type="text" id="direccion" placeholder="Calle, número, departamento" required>
+                        </div>
+                        <div class="field full">
+                            <label for="distrito">Distrito</label>
+                            <input type="text" id="distrito" placeholder="Ej. Miraflores" required>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <h3>2. Método de envío</h3>
+                    <div class="option-list" id="shipping-options">
+                        <label class="option">
+                            <input type="radio" name="envio" value="estandar" checked>
+                            <span>Estándar<small>3 a 5 días · gratis desde S/ 200</small></span>
+                            <span class="opt-price" id="price-estandar"></span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="envio" value="express">
+                            <span>Express<small>Llega en 24 horas</small></span>
+                            <span class="opt-price">S/ 20.00</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="envio" value="recojo">
+                            <span>Recojo en tienda<small>Listo en 2 horas</small></span>
+                            <span class="opt-price">Gratis</span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <h3>3. Método de pago</h3>
+                    <div class="option-list">
+                        <label class="option"><input type="radio" name="pago" value="Tarjeta" checked><span>Tarjeta de crédito o débito</span></label>
+                        <label class="option"><input type="radio" name="pago" value="Yape / Plin"><span>Yape / Plin</span></label>
+                        <label class="option"><input type="radio" name="pago" value="Contra entrega"><span>Pago contra entrega</span></label>
+                    </div>
+
+                    <div class="pay-detail" id="pay-tarjeta">
+                        <div class="form-grid">
+                            <div class="field full">
+                                <label for="card-num">Número de tarjeta</label>
+                                <input type="text" id="card-num" inputmode="numeric" placeholder="0000 0000 0000 0000" autocomplete="off">
+                            </div>
+                            <div class="field">
+                                <label for="card-exp">Vencimiento</label>
+                                <input type="text" id="card-exp" placeholder="MM/AA" autocomplete="off">
+                            </div>
+                            <div class="field">
+                                <label for="card-cvv">CVV</label>
+                                <input type="password" id="card-cvv" inputmode="numeric" placeholder="123" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pay-detail pay-hint" id="pay-yape" hidden>
+                        Al confirmar, te mostraremos el número para enviar tu pago por Yape o Plin.
+                    </div>
+                    <div class="pay-detail pay-hint" id="pay-contra" hidden>
+                        Pagarás en efectivo o con tarjeta cuando recibas tu pedido.
+                    </div>
+                </section>
+            </div>
+
+            <aside class="panel">
+                <h3>Resumen del pedido</h3>
+                <div id="mini-items"></div>
+                <div class="summary-row"><span>Subtotal</span><span id="s-sub"></span></div>
+                <div class="summary-row"><span>Envío</span><span id="s-ship"></span></div>
+                <div class="summary-row"><span>CO₂ que ahorras</span><span id="s-co2"></span></div>
+                <div class="summary-row total"><span>Total</span><span id="s-total"></span></div>
+                <div class="summary-actions">
+                    <button class="btn btn-block" type="submit">Confirmar compra</button>
+                    <a class="btn btn-outline btn-block" href="carrito.html">Volver al carrito</a>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="app-footer" id="site-footer"></footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const lines = cartLines();
+            if (!lines.length) { document.getElementById("empty").hidden = false; return; }
+
+            const form = document.getElementById("checkout-form");
+            form.hidden = false;
+            document.getElementById("nombre").value = getUser().name;
+
+            const method = () => form.elements["envio"].value;
+            const payment = () => form.elements["pago"].value;
+
+            function updateSummary() {
+                const t = cartTotals(lines, method());
+                document.getElementById("mini-items").innerHTML = lines.map(l =>
+                    `<div class="mini-item"><span>${l.name} (${sizeLabel(l, l.size)}) × ${l.qty}</span><span>${fmt(l.price * l.qty)}</span></div>`).join("");
+                document.getElementById("s-sub").textContent = fmt(t.subtotal);
+                document.getElementById("s-ship").textContent = t.shipping === 0 ? "Gratis" : fmt(t.shipping);
+                document.getElementById("s-co2").textContent = "🌱 " + t.co2.toFixed(1) + " kg";
+                document.getElementById("s-total").textContent = fmt(t.total);
+                document.getElementById("price-estandar").textContent =
+                    cartTotals(lines, "estandar").shipping === 0 ? "Gratis" : "S/ 10.00";
+            }
+
+            function updatePayment() {
+                const p = payment();
+                document.getElementById("pay-tarjeta").hidden = p !== "Tarjeta";
+                document.getElementById("pay-yape").hidden = p !== "Yape / Plin";
+                document.getElementById("pay-contra").hidden = p !== "Contra entrega";
+                ["card-num", "card-exp", "card-cvv"].forEach(id => document.getElementById(id).required = p === "Tarjeta");
+            }
+
+            form.addEventListener("change", () => { updateSummary(); updatePayment(); });
+            updateSummary();
+            updatePayment();
+
+            form.addEventListener("submit", e => {
+                e.preventDefault();
+                const t = cartTotals(lines, method());
+                const order = {
+                    id: "CA-" + (10000 + Math.floor(Math.random() * 89999)),
+                    date: todayISO(),
+                    status: "En preparación",
+                    items: lines.map(l => ({ id: l.id, name: l.name, size: l.size, qty: l.qty, price: l.price })),
+                    subtotal: t.subtotal,
+                    shipping: t.shipping,
+                    total: t.total,
+                    co2: t.co2,
+                    method: SHIPPING[method()].label,
+                    pay: payment(),
+                    address: `${document.getElementById("direccion").value.trim()}, ${document.getElementById("distrito").value.trim()}, ${document.getElementById("ciudad").value.trim()}`
+                };
+                // No se guardan datos de tarjeta: solo el método de pago elegido
+                const orders = getOrders();
+                orders.unshift(order);
+                LS.set("ca_orders", orders);
+                LS.set("ca_lastOrder", order);
+                saveCart([]);
+                location.href = "confirmacion.html";
+            });
+        });
+    </script>
+</body>
+</html>

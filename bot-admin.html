@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Consultas Bot - Admin CompraAmigo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f4f9; display: flex; }
+        .sidebar { width: 250px; background-color: #333; color: white; height: 100vh; padding: 20px; box-sizing: border-box; position: fixed; }
+        .sidebar h2 { color: #FFA726; font-size: 20px; }
+        .sidebar a { display: block; color: #ccc; text-decoration: none; margin: 15px 0; padding: 8px 10px; border-radius: 4px; font-size: 14px; }
+        .sidebar a:hover, .sidebar a.active { background-color: #444; color: #FFA726; }
+        .sidebar hr { border: 0; border-top: 1px solid #545454; margin: 20px 0; }
+        .btn-logout { color: #d9534f !important; font-weight: bold; }
+        .content { margin-left: 250px; flex-grow: 1; padding: 30px; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 6px; overflow: hidden; margin-top: 20px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; }
+        th { background-color: #007BFF; color: white; }
+    </style>
+    <script src="js/admin-session.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <a href="dashboard.html">📊 Dashboard General</a>
+        <a href="inventario-admin.html">📦 Gestión de Inventario</a>
+        <a href="pedidos-admin.html">🛒 Gestión de Pedidos</a>
+        <a href="bot-admin.html" class="active">💬 Consultas del Bot IA</a>
+        <a href="ods-admin.html">🌱 Reporte ODS 12</a>
+        <hr>
+        <a href="index.html">🏠 Ir a la Web Pública</a>
+        <a href="login.html" class="btn-logout" data-admin-logout>⬅ Cerrar Sesión</a>
+    </div>
+
+    <div class="content">
+        <h1>Monitoreo del Asistente de IA</h1>
+        <p style="color: #666;">Registro de las últimas interacciones de los clientes con el chatbot de tallas.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Usuario</th>
+                    <th>Consulta Realizada</th>
+                    <th>Sugerencia del Bot</th>
+                    <th>Resultado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#USR-402</td>
+                    <td>¿Qué talla de casaca soy si mido 1.72m y peso 70kg?</td>
+                    <td>Talla M (Ajustado) / Talla L (Oversize)</td>
+                    <td><span style="color: green; font-weight: bold;">Compra Exitosa</span></td>
+                </tr>
+                <tr>
+                    <td>#USR-405</td>
+                    <td>¿Las zapatillas eco-friendly son horma ancha?</td>
+                    <td>Sí, se recomienda la talla habitual.</td>
+                    <td><span style="color: green; font-weight: bold;">Compra Exitosa</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

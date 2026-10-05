@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CompraAmigo</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="images/logo_compraamigo.png" alt="CompraAmigo">
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar productos">
+            <button>Buscar</button>
+        </div>
+        <div class="header-options">
+            <select>
+                <option value="categorias">Categorías</option>
+            </select>
+            <a class="login-link" href="login.html">Iniciar sesión</a>
+            <a href="login.html#registro">
+            <button class="register-button">Regístrate ahora</button>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Descubre lo mejor de CompraAmigo</h1>
+            <p>Tu asistente de compras en línea.</p>
+        </section>
+
+        <section class="features">
+            <div class="feature">
+                <h3>Asistencia Virtual</h3>
+                <p>Encuentra lo que necesitas fácilmente</p>
+                <p>Navega por categorías y productos.</p>
+                <a href="login.html">Explorar catálogo</a>
+                <img src="images/atencion01.png" alt="Asistencia Virtual">
+            </div>
+
+            <div class="feature">
+                <h3>Asistencia al cliente</h3>
+                <p>Conéctate con nosotros</p>
+                <p>Estamos aquí para ayudarte.</p>
+                <a href="#contacto">Contáctanos</a>
+                <img src="images/atencion02.png" alt="Asistencia al Cliente">
+            </div>
+
+            <div class="feature">
+                <h3>Tu compra, nuestra prioridad</h3>
+                <p>Asistencia personalizada al instante</p>
+                <p>Resolvemos tus dudas rápidamente.</p>
+                <a href="#contacto">Habla con un experto</a>
+                <img src="images/atencion03.png" alt="Asistencia Instantánea">
+            </div>
+        </section>
+
+        <!-- Nueva sección: Así funciona CompraAmigo -->
+        <section class="how-it-works">
+            <h2>Así funciona CompraAmigo</h2>
+            <div class="steps">
+                <div class="step">
+                    <span class="number">1</span>
+                    <div class="step-info">
+                        <h4>Paso 1: Regístrate</h4>
+                        <p>Crea tu cuenta en minutos.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="number">2</span>
+                    <div class="step-info">
+                        <h4>Paso 2: Explora</h4>
+                        <p>Navega por nuestro catálogo de productos.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <span class="number">3</span>
+                    <div class="step-info">
+                        <h4>Paso 3: Compra</h4>
+                        <p>Añade productos a tu carrito y finaliza.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nueva sección: Llamada a la acción -->
+        <section class="cta-section" style="background-image: url('images/fondo\,parte02.png'); background-size: cover; background-position: center; height: 80vh;">
+            <div class="cta-overlay">
+                <h3>Conéctate con CompraAmigo</h3>
+                <p>Tu experiencia de compra mejorada.</p>
+                <div class="cta-buttons">
+                    <a href="login.html#registro" class="cta-button">Únete a nuestra comunidad</a>
+                    <a href="#contacto" class="cta-button">Contáctanos</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nueva sección: Contacto -->
+        <section class="contact-section" id="contacto">
+            <div class="contact-info">
+                <h2>Estamos aquí para ti</h2>
+                <p>Asistencia personalizada</p>
+                <ul>
+                    <li>
+                        <img src="images/correo.png" alt="Correo electrónico">
+                        <p><strong>Correo electrónico</strong><br>contacto@compraamigo.com</p>
+                    </li>
+                    <li>
+                        <img src="images/telefono.png" alt="Teléfono">
+                        <p><strong>Teléfono</strong><br>+51 969654033</p>
+                    </li>
+                    <li>
+                        <img src="images/ubicacion.png" alt="Ubicación">
+                        <p><strong>Ubicación</strong><br>Chorrillos 123, Lima, Perú</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="contact-form">
+                <form action="#" method="post">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" name="name" placeholder="Escribe tu nombre">
+
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" name="email" placeholder="Escribe tu correo">
+
+                    <label for="message">Mensaje</label>
+                    <textarea id="message" name="message" placeholder="Escribe tu mensaje aquí"></textarea>
+
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <div class="footer-content">
+            <p>CompraAmigo Team</p>
+            <ul>
+                <li><a href="#">Sobre nosotros</a></li>
+                <li><a href="#">Nuestros servicios</a></li>
+                <li><a href="#">LinkedIn</a></li>
+                <li><a href="#">Contáctanos</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>2024 CompraAmigo. Todos los derechos reservados.</p>
+            <ul class="legal-links">
+                <li><a href="#">Política de privacidad</a></li>
+                <li><a href="#">Términos de servicio</a></li>
+                <li><a href="#">Configuración de cookies</a></li>
+            </ul>
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook">FB</a>
+                <a href="#" aria-label="Instagram">IG</a>
+                <a href="#" aria-label="X / Twitter">X</a>
+                <a href="#" aria-label="LinkedIn">in</a>
+                <a href="#" aria-label="YouTube">YT</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

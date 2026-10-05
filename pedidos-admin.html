@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Pedidos - Admin CompraAmigo</title>
+
+    <style>
+
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f4f9; display: flex;}
+
+        .sidebar { width: 250px; background-color: #333; color: white; height: 100vh; padding: 20px; box-sizing: border-box; position: fixed; }
+        .sidebar h2 { color: #FFA726; }
+        .sidebar a { display: block; color: #ccc; text-decoration: none; margin: 15px 0; padding: 8px 10px; border-radius: 4px; }
+        .sidebar a:hover { background-color: #444; color: #FFA726;}
+        .content { margin-left: 250px; padding: 30px; width: 100%; }
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; }
+
+        th,
+        td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left;}
+
+        th {
+            background-color: #FFA726;
+            color: white;
+        }
+
+        .estado {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .pendiente {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .preparando {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .enviado {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .entregado {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        select {
+            padding: 6px;
+            border-radius: 4px;
+        }
+
+    </style>
+    <script src="js/admin-session.js"></script>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="inventario-admin.html">📦 Productos e Inventario</a>
+        <a href="pedidos-admin.html">🛒 Gestión de Pedidos</a>
+        <a href="bot-admin.html">💬 Consultas Bot IA</a>
+        <a href="ods-admin.html">🌱 Reporte ODS 12</a>
+
+        <hr>
+        <a href="tienda.html">🏠 Web Pública</a>
+        <a href="login.html" data-admin-logout>⬅ Cerrar Sesión</a>
+
+    </div>
+
+
+    <div class="content">
+
+        <h1>Gestión de Pedidos</h1>
+        <p>Administración y seguimiento de los pedidos realizados por los clientes.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Pedido</th>
+                    <th>Cliente</th>
+                    <th>Producto</th>
+                    <th>Total</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+                <tr>
+                    <td>#001</td>
+                    <td>Cliente 01</td>
+                    <td>Casaca Impermeable</td>
+                    <td>S/ 120.00</td>
+                    <td>09/09/2026</td>
+                    <td>
+
+                        <select onchange="cambiarEstado(this)">
+                            <option value="pendiente">
+                                Pendiente
+                            </option>
+                            <option value="preparando">
+                                Preparando
+                            </option>
+                            <option value="enviado">
+                                Enviado
+                            </option>
+                            <option value="entregado">
+                                Entregado
+                            </option>
+                        </select>
+                        <span class="estado pendiente">
+                            Pendiente
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>#002</td>
+                    <td>Cliente 02</td>
+                    <td>Zapatillas Eco-Friendly</td>
+                    <td>S/ 150.00</td>
+                    <td>10/09/2026</td>
+                    <td>
+
+                        <select onchange="cambiarEstado(this)">
+                            <option value="pendiente">
+                                Pendiente
+                            </option>
+                            <option value="preparando">
+                                Preparando
+                            </option>
+                            <option value="enviado" selected>
+                                Enviado
+                            </option>
+                            <option value="entregado">
+                                Entregado
+                            </option>
+                        </select>
+                        <span class="estado enviado">
+                            Enviado
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>#003</td>
+                    <td>Cliente 03</td>
+                    <td>Polo Algodón Orgánico</td>
+                    <td>S/ 65.00</td>
+                    <td>11/09/2026</td>
+                    <td>
+
+                        <select onchange="cambiarEstado(this)">
+                            <option value="pendiente">
+                                Pendiente
+                            </option>
+                            <option value="preparando">
+                                Preparando
+                            </option>
+                            <option value="enviado">
+                                Enviado
+                            </option>
+                            <option value="entregado" selected>
+                                Entregado
+                            </option>
+                        </select>
+
+                        <span class="estado entregado">
+                            Entregado
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+
+        function cambiarEstado(select) {
+            const estado = select.value;
+            const fila = select.closest("tr");
+            const etiqueta = fila.querySelector(".estado");
+            etiqueta.textContent =
+                estado.charAt(0).toUpperCase() + estado.slice(1);
+
+            etiqueta.className = "estado " + estado;
+        }
+
+    </script>
+</body>
+</html>

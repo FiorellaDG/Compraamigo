@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito - CompraAmigo</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body data-page="carrito">
+    <header class="app-header" id="site-header"></header>
+
+    <main class="page">
+        <div class="stepper">
+            <div class="st current"><b>1</b> Carrito</div><div class="sep"></div>
+            <div class="st"><b>2</b> Datos y pago</div><div class="sep"></div>
+            <div class="st"><b>3</b> Confirmación</div>
+        </div>
+
+        <h1 class="page-title">Tu carrito</h1>
+        <p class="page-sub">Revisa tus productos antes de pagar.</p>
+
+        <div id="content"></div>
+    </main>
+
+    <footer class="app-footer" id="site-footer"></footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        function render() {
+            const lines = cartLines();
+            const root = document.getElementById("content");
+
+            if (!lines.length) {
+                root.innerHTML = `
+                    <div class="empty-state">
+                        <div class="big">🛒</div>
+                        <h3>Tu carrito está vacío</h3>
+                        <p>Explora el catálogo y añade los productos que te gusten.</p>
+                        <a class="btn" href="tienda.html">Ir al catálogo</a>
+                    </div>`;
+                return;
+            }
+
+            const t = cartTotals(lines, "estandar");
+            const faltan = FREE_SHIPPING_FROM - t.subtotal;
+
+            root.innerHTML = `
+                <div class="two-col">
+                    <div class="panel">
+                        ${lines.map(l => `
+                            <div class="cart-item">
+                                <div class="cart-thumb">${productImg(l)}</div>
+                                <div>
+                                    <h4>${l.name}</h4>
+                                    <p class="meta">${sizeLabel(l, l.size)} · ${fmt(l.price)} c/u</p>
+                                    <button class="link-btn" data-remove="${l.idx}">Quitar</button>
+                                </div>
+                                <div class="qty">
+                                    <button data-qty="${l.idx}" data-delta="-1" aria-label="Menos">−</button>
+                                    <span>${l.qty}</span>
+                                    <button data-qty="${l.idx}" data-delta="1" aria-label="Más">+</button>
+                                </div>
+                                <div class="line-total">${fmt(l.price * l.qty)}</div>
+                            </div>`).join("")}
+                    </div>
+
+                    <aside class="panel">
+                        <h3>Resumen del pedido</h3>
+                        <div class="summary-row"><span>Subtotal</span><span>${fmt(t.subtotal)}</span></div>
+                        <div class="summary-row"><span>Envío estándar</span><span>${t.shipping === 0 ? "Gratis" : fmt(t.shipping)}</span></div>
+                        ${faltan > 0
+                            ? `<p class="summary-note">Te faltan ${fmt(faltan)} para envío gratis.</p>`
+                            : `<p class="summary-note">✔ Tienes envío estándar gratis.</p>`}
+                        <div class="summary-row"><span>CO₂ que ahorras</span><span>🌱 ${t.co2.toFixed(1)} kg</span></div>
+                        <div class="summary-row total"><span>Total</span><span>${fmt(t.total)}</span></div>
+                        <div class="summary-actions">
+                            <a class="btn btn-block" href="checkout.html">Ir a pagar</a>
+                            <a class="btn btn-outline btn-block" href="tienda.html">Seguir comprando</a>
+                        </div>
+                    </aside>
+                </div>`;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            render();
+            document.getElementById("content").addEventListener("click", e => {
+                const cart = getCart();
+                const q = e.target.closest("[data-qty]");
+                const r = e.target.closest("[data-remove]");
+                if (q) {
+                    const i = Number(q.dataset.qty);
+                    cart[i].qty = Math.min(10, Math.max(1, cart[i].qty + Number(q.dataset.delta)));
+                    saveCart(cart);
+                    render();
+                } else if (r) {
+                    cart.splice(Number(r.dataset.remove), 1);
+                    saveCart(cart);
+                    render();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

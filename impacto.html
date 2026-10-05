@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impacto ODS 12 - CompraAmigo</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body data-page="impacto">
+    <header class="app-header" id="site-header"></header>
+
+    <main class="page">
+        <section class="ods-hero">
+            <div class="ods-badge"><big>12</big>ODS</div>
+            <div class="txt">
+                <h1>Producción y consumo responsables</h1>
+                <p>El Objetivo de Desarrollo Sostenible 12 busca que consumamos y produzcamos usando menos recursos y generando menos residuos. En CompraAmigo te ayudamos a elegir productos con menor huella y a comprar solo lo que necesitas.</p>
+            </div>
+        </section>
+
+        <h2 class="section-title">Tu impacto personal</h2>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="num" id="st-co2">0</div><p>kg de CO₂ ahorrados</p></div>
+            <div class="stat-card"><div class="num" id="st-trees">0</div><p>árboles equivalentes en un año</p></div>
+            <div class="stat-card"><div class="num" id="st-items">0</div><p>productos sostenibles comprados</p></div>
+            <div class="stat-card"><div class="num" id="st-orders">0</div><p>pedidos realizados</p></div>
+        </div>
+
+        <h2 class="section-title">Meta de la comunidad</h2>
+        <div class="panel">
+            <h3>Ahorremos 2,000 kg de CO₂ este año</h3>
+            <div class="progress"><div id="goal-bar" style="width:62%"></div></div>
+            <p><strong id="goal-text">1,250 kg</strong> ahorrados por la comunidad CompraAmigo (62 %).</p>
+            <p class="note-demo">Datos de ejemplo para el prototipo.</p>
+        </div>
+
+        <h2 class="section-title">Cómo contribuimos</h2>
+        <div class="how-list">
+            <div class="item">
+                <div class="ico">♻️</div>
+                <div><h3>Materiales reciclados y orgánicos</h3><p>Priorizamos productos hechos con fibras recicladas, algodón orgánico y materiales de bajo impacto.</p></div>
+            </div>
+            <div class="item">
+                <div class="ico">🤖</div>
+                <div><h3>Menos devoluciones con el asistente</h3><p>El asistente te recomienda la talla correcta y así evitamos envíos y devoluciones innecesarias.</p></div>
+            </div>
+            <div class="item">
+                <div class="ico">📊</div>
+                <div><h3>Transparencia en cada compra</h3><p>Cada producto muestra el CO₂ que ahorras, para que compares y decidas con información.</p></div>
+            </div>
+        </div>
+
+        <div class="banner-eco" style="margin-top:40px">
+            <div>
+                <h3>Suma más impacto</h3>
+                <p>Elige productos con etiqueta de ahorro de CO₂ en tu próxima compra.</p>
+            </div>
+            <a class="btn btn-dark" href="tienda.html">Ir al catálogo</a>
+        </div>
+    </main>
+
+    <footer class="app-footer" id="site-footer"></footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const orders = getOrders();
+            const co2 = orders.reduce((s, o) => s + o.co2, 0);
+            const items = orders.reduce((s, o) => s + o.items.reduce((a, i) => a + i.qty, 0), 0);
+
+            document.getElementById("st-co2").textContent = co2.toFixed(1);
+            document.getElementById("st-trees").textContent = (co2 / 21).toFixed(1); // ~21 kg CO₂ por árbol al año
+            document.getElementById("st-items").textContent = items;
+            document.getElementById("st-orders").textContent = orders.length;
+
+            // La meta de la comunidad de ejemplo suma tu aporte
+            const base = 1250 + co2;
+            const pct = Math.min(100, Math.round(base / 2000 * 100));
+            document.getElementById("goal-bar").style.width = pct + "%";
+            document.querySelector("#goal-text").parentElement.innerHTML =
+                `<strong>${Math.round(base).toLocaleString("es-PE")} kg</strong> ahorrados por la comunidad CompraAmigo (${pct} %).`;
+        });
+    </script>
+</body>
+</html>

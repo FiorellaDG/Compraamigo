@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - CompraAmigo Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f6f4; display: flex; color: #333; }
+        
+        /* Sidebar estilo profesional */
+        .sidebar { width: 260px; background-color: #1b4332; color: white; height: 100vh; padding: 25px 20px; box-sizing: border-box; position: fixed; }
+        .sidebar h2 { color: #52b788; font-size: 20px; margin-top: 0; }
+        .sidebar a { display: block; color: #d8f3dc; text-decoration: none; margin: 15px 0; padding: 10px 12px; border-radius: 6px; font-size: 14px; font-weight: 500; transition: 0.2s; }
+        .sidebar a:hover, .sidebar a.active { background-color: #2d6a4f; color: white; }
+        .sidebar hr { border: 0; border-top: 1px solid #40916c; margin: 20px 0; }
+        .btn-logout { color: #ffb703 !important; font-weight: bold; }
+
+        /* Contenido Principal */
+        .content { margin-left: 260px; flex-grow: 1; padding: 35px; box-sizing: border-box; }
+        
+        .top-banner { background: #1b4332; color: white; padding: 25px 30px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .top-banner h1 { margin: 0; font-size: 22px; }
+        .top-banner p { margin: 5px 0 0 0; color: #b7e4c7; font-size: 14px; }
+        .badge-streak { background: #ffb703; color: #000; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 13px; }
+
+        /* Tarjetas de Acceso Rápido (Estilo Módulos) */
+        .quick-actions { display: flex; gap: 15px; margin-bottom: 25px; }
+        .action-card { background: white; padding: 20px; border-radius: 8px; flex: 1; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-top: 4px solid #52b788; font-weight: bold; color: #2d6a4f; cursor: pointer; text-decoration: none; }
+        .action-card:hover { background: #f8fdf9; }
+
+        /* Contenedor de Métricas y Actividad */
+        .grid-section { display: flex; gap: 20px; margin-bottom: 25px; }
+        .card-box { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); flex: 1; }
+        .card-box h3 { margin-top: 0; font-size: 16px; color: #1b4332; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+        /* Lista de Actividad Reciente tipo Feed */
+        .activity-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+        .activity-item:last-child { border-bottom: none; }
+        .tag-eco { background: #d8f3dc; color: #1b4332; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+    </style>
+    <script src="js/admin-session.js"></script>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>CompraAmigo</h2>
+        <a href="dashboard.html" class="active">📊 Panel Principal</a>
+        <a href="inventario-admin.html">📦 Gestión de Inventario</a>
+        <a href="pedidos-admin.html">🛒 Gestión de Pedidos</a>
+        <a href="bot-admin.html">💬 Consultas Bot IA</a>
+        <a href="ods-admin.html">🌱 Reporte ODS 12</a>
+        <hr>
+        <a href="index.html">🏠 Ir a la Web Pública</a>
+        <a href="login.html" class="btn-logout" data-admin-logout>⬅ Cerrar Sesión</a>
+    </div>
+
+    <!-- Contenido -->
+    <div class="content">
+        
+        <!-- Banner Superior de Bienvenida -->
+        <div class="top-banner">
+            <div>
+                <h1>Bienvenido de regreso, Administrador</h1>
+                <p>Tu supervisión optimiza el consumo responsable y reduce la huella textil.</p>
+            </div>
+            <div class="badge-streak">🔥 14 Días con Cero Devoluciones</div>
+        </div>
+
+        <!-- Tarjetas de Acceso Rápido Estilo App Moderna -->
+        <div class="quick-actions">
+            <a href="inventario-admin.html" class="action-card">📦 Gestionar Inventario</a>
+            <a href="pedidos-admin.html" class="action-card">🛒 Gestionar Pedidos</a>
+            <a href="bot-admin.html" class="action-card" style="border-top-color: #ffb703;">🤖 Revisar Consultas IA</a>
+            <a href="ods-admin.html" class="action-card" style="border-top-color: #2d6a4f;">🌱 Métricas ODS 12</a>
+        </div>
+
+        <!-- Secciones de Progreso y Actividad en Tiempo Real -->
+        <div class="grid-section">
+            
+            <!-- Progreso de Ventas -->
+            <div class="card-box">
+                <h3>Resumen de Transacciones</h3>
+                <p style="font-size: 13px; color: #666;">Métricas acumuladas del periodo actual:</p>
+                <div style="margin: 15px 0;">
+                    <strong>Ventas del Día:</strong> S/ 680.00 <span style="color: #52b788; font-size: 12px;">(+12% vs ayer)</span>
+                </div>
+                <div style="margin: 15px 0;">
+                    <strong>Ventas del Mes:</strong> S/ 4,520.00
+                </div>
+                <div style="margin: 15px 0;">
+                    <strong>Consultas de Tallas IA:</strong> 128 atendidas
+                </div>
+            </div>
+
+            <!-- Feed de Actividad Reciente de la Comunidad -->
+            <div class="card-box">
+                <h3>Actividad Reciente de Clientes</h3>
+                
+                <div class="activity-item">
+                    <span><strong>#USR-102</strong> compró Casaca L (Sugerido por IA)</span>
+                    <span class="tag-eco">CO₂ Ahorrado</span>
+                </div>
+                <div class="activity-item">
+                    <span><strong>#USR-105</strong> consultó tallas para Zapatillas</span>
+                    <span style="color: #888; font-size: 12px;">Hace 5 min</span>
+                </div>
+                <div class="activity-item">
+                    <span><strong>#USR-110</strong> completó compra de Polo Orgánico</span>
+                    <span class="tag-eco">ODS 12</span>
+                </div>
+                <div class="activity-item">
+                    <span><strong>#USR-112</strong> actualizó biometría de tallas</span>
+                    <span style="color: #888; font-size: 12px;">Hace 22 min</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

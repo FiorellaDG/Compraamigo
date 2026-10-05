@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compra confirmada - CompraAmigo</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body data-page="pedidos">
+    <header class="app-header" id="site-header"></header>
+
+    <main class="page">
+        <div class="stepper">
+            <div class="st done"><b>1</b> Carrito</div><div class="sep"></div>
+            <div class="st done"><b>2</b> Datos y pago</div><div class="sep"></div>
+            <div class="st current"><b>3</b> Confirmación</div>
+        </div>
+
+        <div id="content"></div>
+    </main>
+
+    <footer class="app-footer" id="site-footer"></footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const o = LS.get("ca_lastOrder", null);
+            const root = document.getElementById("content");
+
+            if (!o) {
+                root.innerHTML = `
+                    <div class="empty-state">
+                        <div class="big">📦</div>
+                        <h3>No hay una compra reciente</h3>
+                        <p>Cuando finalices una compra, aquí verás su resumen.</p>
+                        <a class="btn" href="tienda.html">Ir al catálogo</a>
+                    </div>`;
+                return;
+            }
+
+            const yape = o.pay === "Yape / Plin"
+                ? `<p class="pay-hint" style="margin-top:12px">Envía tu pago de <strong>${fmt(o.total)}</strong> por Yape o Plin al <strong>999 888 777</strong> (CompraAmigo) e indica el código ${o.id}.</p>`
+                : "";
+
+            root.innerHTML = `
+                <div class="confirm-box">
+                    <div class="confirm-icon">✔</div>
+                    <h1 class="page-title">¡Gracias por tu compra, ${escapeHtml(getUser().name.split(" ")[0])}!</h1>
+                    <p class="page-sub" style="margin-bottom:0">Recibirás las novedades de tu pedido en tu correo.</p>
+                    <div class="order-code">Pedido ${o.id}</div>
+
+                    <div class="panel">
+                        <h3>Resumen</h3>
+                        ${o.items.map(i => `
+                            <div class="mini-item">
+                                <span>${i.name} (${i.size}) × ${i.qty}</span>
+                                <span>${fmt(i.price * i.qty)}</span>
+                            </div>`).join("")}
+                        <div class="summary-row"><span>Envío · ${o.method}</span><span>${o.shipping === 0 ? "Gratis" : fmt(o.shipping)}</span></div>
+                        <div class="summary-row total"><span>Total pagado</span><span>${fmt(o.total)}</span></div>
+                        <p style="margin-top:14px;color:#555;line-height:1.6">
+                            <strong>Entrega:</strong> ${escapeHtml(o.address)}<br>
+                            <strong>Pago:</strong> ${o.pay}
+                        </p>
+                        ${yape}
+                        <p class="summary-note" style="margin-top:14px">🌱 Con esta compra ahorras ${o.co2.toFixed(1)} kg de CO₂.</p>
+                    </div>
+
+                    <div class="confirm-actions">
+                        <a class="btn" href="pedidos.html">Ver mis pedidos</a>
+                        <a class="btn btn-outline" href="tienda.html">Seguir comprando</a>
+                    </div>
+                </div>`;
+        });
+    </script>
+</body>
+</html>

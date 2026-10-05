@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario - Admin CompraAmigo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f4f9; display: flex; }
+        .sidebar { width: 250px; background-color: #333; color: white; height: 100vh; padding: 20px; box-sizing: border-box; position: fixed; }
+        .sidebar h2 { color: #FFA726; font-size: 20px; }
+        .sidebar a { display: block; color: #ccc; text-decoration: none; margin: 15px 0; padding: 8px 10px; border-radius: 4px; font-size: 14px; }
+        .sidebar a:hover, .sidebar a.active { background-color: #444; color: #FFA726; }
+        .sidebar hr { border: 0; border-top: 1px solid #545454; margin: 20px 0; }
+        .btn-logout { color: #d9534f !important; font-weight: bold; }
+        .content { margin-left: 250px; flex-grow: 1; padding: 30px; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 6px; overflow: hidden; margin-top: 20px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; }
+        th { background-color: #FFA726; color: white; }
+        .btn { padding: 6px 10px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 12px; }
+        .btn-edit { background-color: #4CAF50; }
+        .btn-delete { background-color: #f44336; }
+        .form-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .form-box input { padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .btn-add { background-color: #007BFF; color: white; padding: 9px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    </style>
+    <script src="js/admin-session.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <a href="dashboard.html">📊 Dashboard General</a>
+        <a href="inventario-admin.html" class="active">📦 Gestión de Inventario</a>
+        <a href="pedidos-admin.html">🛒 Gestión de Pedidos</a>
+        <a href="bot-admin.html">💬 Consultas del Bot IA</a>
+        <a href="ods-admin.html">🌱 Reporte ODS 12</a>
+        <hr>
+        <a href="index.html">🏠 Ir a la Web Pública</a>
+        <a href="login.html" class="btn-logout" data-admin-logout>⬅ Cerrar Sesión</a>
+    </div>
+
+    <div class="content">
+        <h1>Gestión de Inventario y Productos</h1>
+
+        <!-- Formulario para agregar producto (Exigido por la rúbrica) -->
+        <div class="form-box">
+            <h3>Agregar Nuevo Producto</h3>
+            <input type="text" id="nombreProducto" placeholder="Nombre del producto">
+            <input type="text" id="categoriaProducto" placeholder="Categoría">
+            <input type="number" id="stockProducto" placeholder="Stock">
+            <input type="number" id="precioProducto" placeholder="Precio (S/)" step="0.01">
+            <button class="btn-add">+ Guardar Producto</button>
+        </div>
+
+        <h2>Lista de Artículos Disponibles</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Stock</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaProductos">
+
+                <tr>
+                    <td>001</td>
+                    <td>Casaca Impermeable (Talla L)</td>
+                    <td>Ropa</td>
+                    <td>15</td>
+                    <td>S/ 120.00</td>
+                    <td>
+                        <button class="btn btn-edit">Editar</button>
+                        <button class="btn btn-delete">Borrar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>002</td>
+                    <td>Zapatillas Eco-Friendly</td>
+                    <td>Calzado</td>
+                    <td>8</td>
+                    <td>S/ 150.00</td>
+                    <td>
+                        <button class="btn btn-edit">Editar</button>
+                        <button class="btn btn-delete">Borrar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const nombreProducto = document.getElementById("nombreProducto");
+        const categoriaProducto = document.getElementById("categoriaProducto");
+        const stockProducto = document.getElementById("stockProducto");
+        const precioProducto = document.getElementById("precioProducto");
+        
+        const botonGuardar = document.querySelector(".btn-add");
+        const tablaProductos = document.getElementById("tablaProductos");
+        
+        let contadorID = 3;
+        
+        botonGuardar.addEventListener("click", function() {
+            
+            const nombre = nombreProducto.value.trim();
+            const categoria = categoriaProducto.value.trim();
+            const stock = stockProducto.value;
+            const precio = precioProducto.value;
+            
+            if (nombre === "" || categoria === "" || stock === "" || precio === "") {
+                alert("Completa todos los campos");
+                return;
+            }
+            
+            const nuevaFila = document.createElement("tr");
+            
+            nuevaFila.innerHTML = `
+                <td>${String(contadorID).padStart(3, "0")}</td>
+                <td>${nombre}</td>
+                <td>${categoria}</td>
+                <td>${stock}</td>
+                <td>S/ ${parseFloat(precio).toFixed(2)}</td>
+                <td>
+                    <button class="btn btn-edit">Editar</button>
+                    <button class="btn btn-delete">Borrar</button>
+                </td>
+            `;
+            
+            tablaProductos.appendChild(nuevaFila);
+            
+            contadorID++;
+            
+            nombreProducto.value = "";
+            categoriaProducto.value = "";
+            stockProducto.value = "";
+            precioProducto.value = "";
+            alert("Producto guardado correctamente");
+        });
+
+        tablaProductos.addEventListener("click", function(event) {
+
+            if (event.target.classList.contains("btn-delete")) {
+                
+                const fila = event.target.closest("tr");
+                const confirmar = confirm("¿Deseas eliminar este producto?");
+                
+                if (confirmar) {
+                    fila.remove();
+                    alert("Producto eliminado correctamente");
+                }
+            }
+        });
+
+        tablaProductos.addEventListener("click", function(event) {
+            if (event.target.classList.contains("btn-edit")) {
+                
+                const fila = event.target.closest("tr");
+                
+                const nombreActual = fila.children[1].textContent;
+                const categoriaActual = fila.children[2].textContent;
+                const stockActual = fila.children[3].textContent;
+                const precioActual = fila.children[4].textContent.replace("S/ ", "");
+
+                const nuevoNombre = prompt("Nombre del producto:", nombreActual);
+                const nuevaCategoria = prompt("Categoría:", categoriaActual);
+                const nuevoStock = prompt("Stock:", stockActual);
+                const nuevoPrecio = prompt("Precio:", precioActual);
+                
+                if (
+                    nuevoNombre !== null &&
+                    nuevaCategoria !== null &&
+                    nuevoStock !== null &&
+                    nuevoPrecio !== null
+                ) {
+                    
+                    fila.children[1].textContent = nuevoNombre;
+                    fila.children[2].textContent = nuevaCategoria;
+                    fila.children[3].textContent = nuevoStock;
+                    fila.children[4].textContent =
+                        "S/ " + parseFloat(nuevoPrecio).toFixed(2);
+                        
+                    alert("Producto actualizado correctamente");
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

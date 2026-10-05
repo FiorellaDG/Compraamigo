@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis pedidos - CompraAmigo</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body data-page="pedidos">
+    <header class="app-header" id="site-header"></header>
+
+    <main class="page">
+        <h1 class="page-title">Mis pedidos y favoritos</h1>
+        <p class="page-sub">Sigue tus compras y guarda lo que quieres comprar después.</p>
+
+        <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="pedidos" role="tab">Mis pedidos</button>
+            <button class="tab" data-tab="favoritos" role="tab">Favoritos <span id="fav-count"></span></button>
+        </div>
+
+        <section id="tab-pedidos"></section>
+        <section id="tab-favoritos" hidden></section>
+    </main>
+
+    <footer class="app-footer" id="site-footer"></footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        function renderOrders() {
+            const orders = getOrders();
+            const root = document.getElementById("tab-pedidos");
+
+            if (!orders.length) {
+                root.innerHTML = `
+                    <div class="empty-state">
+                        <div class="big">📦</div>
+                        <h3>Aún no tienes pedidos</h3>
+                        <p>Cuando compres, podrás seguir aquí el estado de cada pedido.</p>
+                        <a class="btn" href="tienda.html">Ir al catálogo</a>
+                    </div>`;
+                return;
+            }
+
+            root.innerHTML = orders.map(o => `
+                <article class="order-card">
+                    <div class="order-head">
+                        <div>
+                            <h3>Pedido ${o.id}</h3>
+                            <small>${fmtDate(o.date)}</small>
+                        </div>
+                        <span class="status ${statusClass(o.status)}">${o.status}</span>
+                    </div>
+
+                    <div class="order-items">
+                        ${o.items.map(i => `
+                            <div class="row">
+                                <div class="thumb">${getProduct(i.id) ? productImg(getProduct(i.id)) : ""}</div>
+                                <div>${i.name}<br><small style="color:#777">${i.size} · Cant. ${i.qty}</small></div>
+                                <span class="qtyp">${fmt(i.price * i.qty)}</span>
+                            </div>`).join("")}
+                    </div>
+
+                    <details>
+                        <summary>Ver detalles de entrega y pago</summary>
+                        <p>
+                            <strong>Dirección:</strong> ${escapeHtml(o.address)}<br>
+                            <strong>Envío:</strong> ${o.method} (${o.shipping === 0 ? "gratis" : fmt(o.shipping)})<br>
+                            <strong>Pago:</strong> ${o.pay}<br>
+                            <strong>CO₂ ahorrado:</strong> ${o.co2.toFixed(1)} kg
+                        </p>
+                    </details>
+
+                    <div class="order-foot">
+                        <strong>Total: ${fmt(o.total)}</strong>
+                        <button class="btn btn-outline btn-sm" data-rebuy="${o.id}">Volver a comprar</button>
+                    </div>
+                </article>`).join("");
+        }
+
+        function renderFavs() {
+            const favs = getFavs().map(getProduct).filter(Boolean);
+            const root = document.getElementById("tab-favoritos");
+            document.getElementById("fav-count").textContent = favs.length ? "(" + favs.length + ")" : "";
+
+            root.innerHTML = favs.length
+                ? `<div class="grid-products">${favs.map(productCard).join("")}</div>`
+                : `<div class="empty-state">
+                        <div class="big">♡</div>
+                        <h3>Todavía no tienes favoritos</h3>
+                        <p>Toca el corazón de un producto para guardarlo aquí.</p>
+                        <a class="btn" href="tienda.html">Explorar el catálogo</a>
+                   </div>`;
+        }
+        window.onFavChange = renderFavs;
+
+        function showTab(name) {
+            document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+            document.getElementById("tab-pedidos").hidden = name !== "pedidos";
+            document.getElementById("tab-favoritos").hidden = name !== "favoritos";
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderOrders();
+            renderFavs();
+            if (location.hash === "#favoritos") showTab("favoritos");
+
+            document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => showTab(t.dataset.tab)));
+
+            document.getElementById("tab-pedidos").addEventListener("click", e => {
+                const b = e.target.closest("[data-rebuy]");
+                if (!b) return;
+                const order = getOrders().find(o => o.id === b.dataset.rebuy);
+                order.items.forEach(i => addToCart(i.id, i.size, i.qty));
+                location.href = "carrito.html";
+            });
+        });
+    </script>
+</body>
+</html>
